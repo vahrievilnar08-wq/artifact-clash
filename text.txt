@@ -1,0 +1,71 @@
+// 1. ПОЛНАЯ БАЗА АРТЕФАКТОВ (Исправленная и сбалансированная)
+const artifactsDB = {
+    // --- COMMON (Обычные) ---
+    "stone": { name: "Камень «просто камень»", image: "common/stone.png", rarity: "Common", value: 8, desc: "Он не делает ничего. Но он хотя бы честный." },
+    "glass_half": { name: "Стакан «наполовину»", image: "common/glass_half.png", rarity: "Common", value: 12, desc: "Наполовину пуст. Наполовину полон. Наполовину забыт на столе." },
+    "pen_empty": { name: "Ручка «кончилась»", image: "common/pen_empty.png", rarity: "Common", value: 15, desc: "Стержень закончился ровно тогда, когда ты подписывал важный документ." },
+    "slime_smart": { name: "Слизень «почти умный»", image: "common/slime_smart.png", rarity: "Common", value: 20, desc: "Он пытался решить теорему, но потом забыл, как дышать." },
+    "moth_light": { name: "Мотылек «к свету»", image: "common/moth_light.png", rarity: "Common", value: 25, desc: "Летит на свет с 2015 года. До сих пор не долетел." },
+    "nut_useful": { name: "Гайка «я еще пригожусь»", image: "common/nut_useful.png", rarity: "Common", value: 10, desc: "Лежит в ящике 10 лет. Ждёт своего часа, которого не будет." },
+    "panel_broken": { name: "Панель «почти работает»", image: "common/panel_broken.png", rarity: "Common", value: 18, desc: "Работает на 99%. Остальные 1% — это когда тебе нужно срочно." },
+    "paperclip": { name: "Скрепка «еще один документ»", image: "common/paperclip.png", rarity: "Common", value: 10, desc: "Согнута, разогнута и снова согнута. Как и твоя карьера." },
+    "door_handle": { name: "Дверная ручка «не сюда»", image: "common/door_handle.png", rarity: "Common", value: 30, desc: "Открывает дверь, которая ведет в стену." },
+    "slime_compass": { name: "Слизневый компас", image: "common/slime_compass.png", rarity: "Common", value: 35, desc: "Всегда указывает на холодильник." },
+    "compass_north": { name: "Компас «почти север»", image: "common/compass_north.png", rarity: "Common", value: 30, desc: "Указывает на север. Иногда на юг. Но чаще на диван." },
+    "rusty_wrench": { name: "Ржавый болтоключ", image: "common/rusty_wrench.png", rarity: "Common", value: 22, desc: "Идеально подходит, чтобы сорвать любую гайку. Или палец." },
+    "mug_hot": { name: "Кружка «почти горячо»", image: "common/mug_hot.png", rarity: "Common", value: 20, desc: "Чай остывает ровно за секунду до того, как ты сделаешь глоток." },
+    "spoon_bad": { name: "Ложка неудачного укуса", image: "common/spoon_bad.png", rarity: "Common", value: 25, desc: "Всегда проливает суп мимо рта. Прямо на белую рубашку." },
+
+    // --- RARE (Редкие) ---
+    "toaster_doom": { name: "Тостер судного дня", image: "rare/toaster_doom.png", rarity: "Rare", value: 80, desc: "Подгорает даже то, что ты не клал внутрь." },
+    "fork_dilemma": { name: "Вилка вечной дилеммы", image: "rare/fork_dilemma.png", rarity: "Rare", value: 100, desc: "4 зубца слева, 4 справа. Выбор невозможен." },
+    "neuro_flashlight": { name: "Нейро-фонарик", image: "rare/neuro_flashlight.png", rarity: "Rare", value: 150, desc: "Подсвечивает мысли. К сожалению, только глупые." },
+    "boots_backwards": { name: "Ботинки обратной пятки", image: "rare/boots_backwards.png", rarity: "Rare", value: 120, desc: "Позволяют ходить задом наперед с невероятной скоростью." },
+    "map_somewhere": { name: "Карта «где-то тут»", image: "rare/map_somewhere.png", rarity: "Rare", value: 70, desc: "Показывает крестик в океане. Вы не умеете плавать." },
+    "hourglass_minute": { name: "Песочные часы «еще минутку»", image: "rare/hourglass_minute.png", rarity: "Rare", value: 120, desc: "Песок в них никогда не заканчивается. Как и твои отговорки." },
+    "antenna_poor": { name: "Антенна «слышу вас плохо»", image: "rare/antenna_poor.png", rarity: "Rare", value: 60, desc: "Ловит сигналы только из прошлого вторника." },
+    "fragment_fault": { name: "Обломок «не моя вина»", image: "rare/fragment_fault.png", rarity: "Rare", value: 85, desc: "Отвалился от чего-то важного. Но ты не при делах." },
+    "cable_tangled": { name: "Кабель «запутался сам»", image: "rare/cable_tangled.png", rarity: "Rare", value: 70, desc: "Он вяжет узлы, пока ты спишь." },
+    "stamp_pending": { name: "Печать «почти согласование»", image: "rare/stamp_pending.png", rarity: "Rare", value: 50, desc: "Подтверждает всё, кроме твоей зарплаты." },
+    "folder_wrong": { name: "Папка «не туда»", image: "rare/folder_wrong.png", rarity: "Rare", value: 100, desc: "Внутри важные документы, которые никто никогда не найдёт." },
+    "printer_jammed": { name: "Принтер «зажевал»", image: "rare/printer_jammed.png", rarity: "Rare", value: 90, desc: "Зажевал твой отчет. И твою карьеру заодно." },
+    "cat_notmine": { name: "Кот «не мой»", image: "rare/cat_notmine.png", rarity: "Rare", value: 300, desc: "Он пришел сам. Он не уходит. Выводы делай сам." },
+    "hamster_world": { name: "Хомяк «запасной мир»", image: "rare/hamster_world.png", rarity: "Rare", value: 400, desc: "В его щеках хранится минимум одна галактика." },
+
+    // --- EPIC (Эпические) ---
+    "teapot_infinity": { name: "Чайник бесконечности", image: "epic/teapot_infinity.png", rarity: "Epic", value: 200, desc: "Кипит вечно. Наливает пустоту." },
+    "crystal_destiny": { name: "Кристалл спорного вкуса", image: "epic/crystal_destiny.png", rarity: "Epic", value: 400, desc: "Светится. Ничего не делает. На вкус как батарейка." },
+    "frying_pan": { name: "Сковорода мягкой посадки", image: "epic/frying_pan.png", rarity: "Epic", value: 250, desc: "Готовит яичницу. Один раз. Потом она улетает." },
+    "cloak_jumper": { name: "Плащ осторожного прыгуна", image: "epic/cloak_jumper.png", rarity: "Epic", value: 300, desc: "Замедляет падение ровно настолько, чтобы ты успел испугаться." },
+    "helmet_commentator": { name: "Шлем тихого комментатора", image: "epic/helmet_commentator.png", rarity: "Epic", value: 450, desc: "Позволяет комментировать действия начальника, но он тебя не услышит." },
+    "gloves_fault": { name: "Перчатки «не моя вина»", image: "epic/gloves_fault.png", rarity: "Epic", value: 350, desc: "В них можно разбить вазу и сказать, что так и было." },
+    "candle_chance": { name: "Свеча последнего шанса", image: "epic/candle_chance.png", rarity: "Epic", value: 150, desc: "Горит ровно до того момента, как ты сдашься." },
+    "trash_ideas": { name: "Мусорный бак сингулярности", image: "epic/trash_ideas.png", rarity: "Epic", value: 350, desc: "Здесь лежат все твои стартапы. И они притягивают мусор." },
+    "lantern_socks": { name: "Фонарь потерянных носков", image: "epic/lantern_socks.png", rarity: "Epic", value: 250, desc: "Привлекает потерянные носки со всей округи." },
+    "chest_stranger": { name: "Реликварий странника", image: "epic/chest_stranger.png", rarity: "Epic", value: 600, desc: "Внутри хранится пыль из 100 городов." },
+    "coffee_machine": { name: "Кофемашина «еще одна»", image: "epic/coffee_machine.png", rarity: "Epic", value: 300, desc: "Варит кофе, который заставляет тебя дрожать." },
+    "heart_singularity": { name: "Сердце уютной сингулярности", image: "epic/heart_singularity.png", rarity: "Epic", value: 400, desc: "Греет лучше пледа. Но может поглотить твой дом." },
+    "fox_plan": { name: "Лис «хитрый план»", image: "epic/fox_plan.png", rarity: "Epic", value: 500, desc: "План состоял из трех частей: украсть, съесть, убежать." },
+    "exoskeleton_tired": { name: "Экзоскелет уставшего героя", image: "mythic/exoskeleton_tired.png", rarity: "Epic", value: 800, desc: "Он сражался со злом. Но теперь он хочет спать." }, // Судя по скрину, он в мификах, но по цене тянет на эпик, пока оставим тут.
+
+    // --- LEGENDARY (Легендарные) ---
+    "knife_blunt": { name: "Нож, который не режет", image: "legendary/knife_blunt.png", rarity: "Legendary", value: 1800, desc: "Безопасен для пальцев. И для еды." },
+    "plate_second": { name: "Тарелка бесконечного второго", image: "legendary/plate_second.png", rarity: "Legendary", value: 1500, desc: "Никогда не останешься голодным. И никогда не похудеешь." },
+    "backpack_bottomless": { name: "Рюкзак бездонного кармана", image: "legendary/backpack_bottomless.png", rarity: "Legendary", value: 1200, desc: "Внутри можно найти всё, кроме того, что ты ищешь." },
+    "helmet_legendary": { name: "Шлем «почти легендарный»", image: "legendary/helmet_legendary.png", rarity: "Legendary", value: 1000, desc: "Отличается от легендарного отсутствием короны." },
+    "feather_writer": { name: "Перо позднего писателя", image: "legendary/feather_writer.png", rarity: "Legendary", value: 1200, desc: "Пишет только ночью. И только о том, как ты устал." },
+    "key_wrong_door": { name: "Ключ от неправильной двери", image: "legendary/key_wrong_door.png", rarity: "Legendary", value: 1800, desc: "Открывает только ту дверь, которая тебе не нужна." },
+    "lock_unopened": { name: "Люк «не открывать»", image: "legendary/lock_unopened.png", rarity: "Legendary", value: 2000, desc: "Если ты его откроешь, ты пожалеешь." },
+    "box_black": { name: "Черный ящик «все записал»", image: "legendary/box_black.png", rarity: "Legendary", value: 1500, desc: "Хранит запись твоих самых неловких моментов." },
+    "badge_intern": { name: "Бейдж «стажер»", image: "legendary/badge_intern.png", rarity: "Legendary", value: 2000, desc: "Даёт право на бесплатный кофе. И всё." },
+    "handle_busy": { name: "Переговорка «занято»", image: "legendary/handle_busy.png", rarity: "Legendary", value: 2200, desc: "Внутри всегда кто-то есть. Даже если комната пуста." },
+    "penguin_golden": { name: "Пингвин «холодная голова»", image: "legendary/penguin_golden.png", rarity: "Legendary", value: 2500, desc: "Не паникует даже когда тонет. Идеальный сотрудник." },
+    "dragon_sneeze": { name: "Дракончик «почти огнедышащий»", image: "legendary/dragon_sneeze.png", rarity: "Legendary", value: 3000, desc: "Чихает искрами. Не пытайтесь кормить перцем." },
+
+    // --- MYTHIC (Мифические) ---
+    "chair_minutes": { name: "Кресло «еще пять минут»", image: "mythic/chair_minutes.png", rarity: "Mythic", value: 6000, desc: "Ты садишься в него и теряешь счет времени." },
+    "satellite_space": { name: "Спутник «личное пространство»", image: "mythic/satellite_space.png", rarity: "Mythic", value: 8000, desc: "Охраняет твои границы. Не подпускает никого ближе 10 метров." },
+    "mirror_truth": { name: "Осколок зеркала правды", image: "mythic/mirror_truth.png", rarity: "Mythic", value: 4000, desc: "Показывает правду. Обычно это «ты выглядишь уставшим»." },
+    "reactor_stable": { name: "Реактор «почти стабильный»", image: "mythic/reactor_stable.png", rarity: "Mythic", value: 10000, desc: "Он не взорвется. Наверное." },
+    "void_pet": { name: "Питомец пустоты", image: "mythic/void_pet.png", rarity: "Mythic", value: 3000, desc: "Смотрит на тебя с осуждением. Он знает, что ты сделал." }
+};
