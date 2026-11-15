@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#090a1b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,13 +12,58 @@
     <!-- CrazyGames SDK v3 -->
     <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="assets/logo.png">
+    <script src="js/image-manifest.js"></script>
+    <script>
+        window.__gameImagesReady = (async () => {
+            const assets = window.GAME_IMAGE_ASSETS || [];
+            const results = await Promise.all(assets.map(src => new Promise(resolve => {
+                const image = new Image();
+                let settled = false;
+                const finish = success => {
+                    if (settled) return;
+                    settled = true;
+                    const decoded = success && typeof image.decode === "function" ? image.decode().catch(() => {}) : Promise.resolve();
+                    decoded.then(() => resolve(success));
+                };
+                image.onload = () => finish(true);
+                image.onerror = () => finish(false);
+                image.src = src;
+                if (image.complete) finish(image.naturalWidth > 0);
+            })));
+            const failed = results.filter(success => !success).length;
+            if (failed) console.warn(`${failed} game images could not be preloaded.`);
+        })();
+    </script>
 
+    <!-- Шрифты подключены локально: игра не тянет внешние CDN -->
+    <link rel="stylesheet" href="css/fonts.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="icon-definitions" aria-hidden="true" focusable="false">
+  <symbol id="icon-scroll" viewBox="0 0 24 24"><path d="M6 3h10a3 3 0 0 1 3 3v14H8a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2m-2 0v13a2 2 0 0 0 2 2m2-11h6m-6 4h6m-6 4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-collection" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5M3 7l2-1v12l-2 1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-bolt" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="icon-gift" viewBox="0 0 24 24"><path d="M3 10h18v11H3zM2 6h20v4H2zm10 0v15M12 6H8a2 2 0 1 1 2-2c0 2 2 2 2 2Zm0 0h4a2 2 0 1 0-2-2c0 2-2 2-2 2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-case" viewBox="0 0 24 24"><path d="M3 7h18v14H3zM2 4h20v3H2zm7 7h6v3H9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 8.5c-.7-.7-1.6-1-2.8-1-1.8 0-3 1-3 2.3 0 3 6 1.2 6 4.3 0 1.3-1.2 2.4-3.2 2.4-1.2 0-2.3-.4-3.1-1.2M12 5.5v13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="icon-sword" viewBox="0 0 24 24"><path d="m14 4 6-2-2 6-9 9-4-4 9-9ZM4 16l4 4-2 2-4-4zM12 6l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-sparkle" viewBox="0 0 24 24"><path d="m12 2 1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-2.8L12 2Zm7 13 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M7 3h10v5a5 5 0 0 1-10 0V3ZM7 6H3v2a4 4 0 0 0 4 4m10-6h4v2a4 4 0 0 1-4 4m-5 1v4m-4 3h8m-7-3h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-7 7L4 11m3-4h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-skull" viewBox="0 0 24 24"><path d="M5 13a7 7 0 1 1 14 0c0 2-1 3-2 4v3h-3v-2h-4v2H7v-3c-1-1-2-2-2-4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/></symbol>
+  <symbol id="icon-warning" viewBox="0 0 24 24"><path d="M12 3 2 21h20L12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v5m0 3h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5m0-8h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="icon-cross" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="icon-handshake" viewBox="0 0 24 24"><path d="m3 8 4-4 5 2 3-1 6 5-9 10-5-4-4-4zm4-4-3 9m13-4-5-3m2 8-3-3m0 6-3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="icon-dice" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 8h.01M16 8h.01M12 12h.01M8 16h.01M16 16h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h2m4 0h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+</svg>
 
 <div class="app">
 
@@ -29,39 +74,41 @@
         </a>
 
         <nav class="nav">
-            <button class="nav-item active" data-section="Главная">
+            <button class="nav-item active" data-section="Home">
                 <img src="assets/icons/home.svg" alt="">
-                <span>Главная</span>
+                <span>Home</span>
             </button>
-            <button class="nav-item" data-section="Кейсы">
+            <button class="nav-item" data-section="Cases">
                 <img src="assets/icons/cases.svg" alt="">
-                <span>Кейсы</span>
+                <span>Cases</span>
             </button>
-            <button class="nav-item" data-section="Битвы">
+            <button class="nav-item" data-section="Battles">
                 <img src="assets/icons/battles.svg" alt="">
-                <span>Битвы</span>
+                <span>Battles</span>
             </button>
-            <button class="nav-item" data-section="Инвентарь">
+            <button class="nav-item" data-section="Inventory">
                 <img src="assets/icons/inventory.svg" alt="">
-                <span>Инвентарь</span>
+                <span>Inventory</span>
             </button>
-            <button class="nav-item" data-section="Рейтинг">
+            <button class="nav-item" data-section="Missions">
+                <svg class="nav-icon" aria-hidden="true"><use href="#icon-scroll"></use></svg>
+                <span>Missions</span><span class="mission-nav-badge" id="missions-nav-badge" aria-label="Completed mission"></span>
+            </button>
+            <button class="nav-item" data-section="Collection">
+                <svg class="nav-icon" aria-hidden="true"><use href="#icon-collection"></use></svg>
+                <span>Collection</span>
+            </button>
+            <button class="nav-item" data-section="Leaderboard">
                 <img src="assets/icons/rating.svg" alt="">
-                <span>Рейтинг</span>
+                <span>Leaderboard</span>
             </button>
-            <button class="nav-item" data-section="Магазин" id="nav-shop-btn">
+            <button class="nav-item" data-section="Shop" id="nav-shop-btn">
                 <img src="assets/icons/shop.svg" alt="">
-                <span>Магазин</span>
+                <span>Shop</span>
             </button>
         </nav>
 
-        <section class="boost-section" id="sidebar-boost">
-            <img src="assets/icons/crown.svg" class="premium-icon" alt="">
-            <h3>⚡ Удвоение<br>Дохода</h3>
-            <p>Получай 2 предмета<br>из каждого кейса!</p>
-            <button class="gold-button" id="btn-activate-boost">⚡ Удвоить доход (5 мин)</button>
-            <div class="boost-timer" id="boost-timer-sidebar" style="display:none; margin-top:8px; font-size:13px; color:#42e8a3; font-weight:800;"></div>
-        </section>
+
     </aside>
 
 
@@ -71,9 +118,10 @@
         <!-- ШАПКА -->
         <header class="topbar">
             <div class="profile">
-                <img class="avatar" src="assets/avatar.png" alt="Аватар">
+                <span class="avatar-frame-wrap" id="profile-avatar-frame"><img class="avatar" src="assets/avatar/avatar.png" alt="Avatar"></span>
                 <div class="profile-info">
-                    <div class="player-name">CrazyPlayer <span class="edit-name">✎</span></div>
+                    <div class="player-name"><span class="player-name-text">CrazyPlayer</span> <span class="edit-name" aria-label="Edit name"></span></div>
+                    <div class="player-title" id="player-title" style="display:none;"></div>
                     <div class="level">
                         <span>Lv. 24</span>
                         <div class="xp"><div class="xp-fill"></div></div>
@@ -84,37 +132,37 @@
 
             <div class="currencies">
                 <div class="boost-indicator" id="boost-indicator-topbar" style="display:none;">
-                    <span>⚡</span>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-bolt"></use></svg>
                     <b id="boost-timer-topbar">05:00</b>
                 </div>
                 <div class="currency coin-currency">
-                    <img src="assets/coin.png" alt="Монеты">
+                    <img src="assets/coin.png" alt="Coins">
                     <b>12,450</b>
                     <button class="currency-plus">+</button>
                 </div>
                 <div class="currency gem-currency">
-                    <img src="assets/emerald.png" alt="Изумруды">
+                    <img src="assets/emerald.png" alt="Gems">
                     <b>820</b>
                     <button class="currency-plus">+</button>
                 </div>
                 <div class="dropdown-wrapper">
-                    <button class="top-icon" id="btn-notifications" aria-label="Уведомления">
+                    <button class="top-icon" id="btn-notifications" aria-label="Notifications">
                         <img src="assets/icons/notifications.svg" alt="">
                     </button>
                     <div class="dropdown-menu" id="menu-notifications">
-                        <h3>Уведомления</h3>
+                        <h3>Notifications</h3>
                         <div class="dropdown-item">
                             <span class="notif-dot"></span>
                             <div>
-                                <b>Добро пожаловать!</b>
-                                <p>Заберите подарок за вход!</p>
+                                <b>Welcome!</b>
+                                <p>Claim your login gift!</p>
                             </div>
                         </div>
                         <div class="dropdown-item">
                             <span class="notif-dot"></span>
                             <div>
-                                <b>Новые кейсы</b>
-                                <p>В магазине появился «Мистический Каталог».</p>
+                                <b>New cases</b>
+                                <p>Mystic Catalog is now in the shop.</p>
                             </div>
                         </div>
                     </div>
@@ -122,26 +170,31 @@
 
                 <!-- Обертка для настроек -->
                 <div class="dropdown-wrapper">
-                    <button class="top-icon" id="btn-settings" aria-label="Настройки">
+                    <button class="top-icon" id="btn-settings" aria-label="Settings">
                         <img src="assets/icons/settings.svg" alt="">
                     </button>
                     <div class="dropdown-menu" id="menu-settings">
-                        <h3>Настройки</h3>
+                        <h3>Settings</h3>
                         <div class="setting-row">
-                            <span>Звук</span>
+                            <span>Sound</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" checked>
+                                <input type="checkbox" id="sound-toggle" checked>
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="setting-row">
-                            <span>Музыка</span>
+                            <span>Music</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" checked>
+                                <input type="checkbox" id="music-toggle" checked>
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <button class="btn-danger" id="btn-reset-progress">Сбросить прогресс</button>
+                        <div class="setting-row setting-row-volume">
+                            <span>Music volume</span>
+                            <span class="volume-value" id="music-volume-value">35%</span>
+                            <input type="range" id="music-volume" class="volume-slider" min="0" max="100" step="5" value="35" aria-label="Music volume">
+                        </div>
+                        <button class="btn-danger" id="btn-reset-progress">Reset progress</button>
                     </div>
                 </div>
             </div>
@@ -152,12 +205,12 @@
         <!-- ========================================== -->
         <section id="screen-all-cases" class="panel" style="display: none; padding: 20px; min-height: 500px;">
             <div class="section-heading" style="margin-bottom: 20px;">
-                <h2><img src="assets/icons/cases.svg" alt=""> Все кейсы</h2>
-                <button class="text-link" id="back-to-main-btn">← На главную</button>
+                <h2><img src="assets/icons/cases.svg" alt=""> All cases</h2>
+                <button class="text-link" id="back-to-main-btn">← Back to home</button>
             </div>
             
             <div class="all-cases-grid" id="all-cases-grid">
-                <!-- Кейсы генерируются динамически из JS для синхронизации цен -->
+                <!-- Cases генерируются динамически из JS для синхронизации цен -->
             </div>
         </section>
 
@@ -166,12 +219,13 @@
         <!-- ========================================== -->
         <section id="screen-inventory" class="panel" style="display: none; padding: 20px; min-height: 500px;">
             <div class="section-heading" style="margin-bottom: 20px;">
-                <h2><img src="assets/icons/inventory.svg" alt=""> Мой Инвентарь</h2>
+                <h2><img src="assets/icons/inventory.svg" alt=""> My Inventory</h2>
                 <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="save-btn" id="upgrade-inventory-btn" style="background: linear-gradient(#b64cff, #7020c4); color: #fff; padding: 0 15px; height: 35px; font-size: 13px; border: 1px solid #d69aff; box-shadow: 0 3px 0 #45107d;">Upgrade</button>
                     <!-- Кнопка ПРОДАТЬ ВСЁ -->
-                    <button class="save-btn" id="sell-all-btn" style="background: linear-gradient(#ffd75c, #ef8919); color: #4b2800; padding: 0 15px; height: 35px; font-size: 13px; border: 1px solid #ffe092; box-shadow: 0 3px 0 #985000;">Продать всё</button>
+                    <button class="save-btn" id="sell-all-btn" style="background: linear-gradient(#ffd75c, #ef8919); color: #4b2800; padding: 0 15px; height: 35px; font-size: 13px; border: 1px solid #ffe092; box-shadow: 0 3px 0 #985000;">Sell all</button>
                     
-                    <button class="text-link" id="back-to-main-from-inv-btn">← На главную</button>
+                    <button class="text-link" id="back-to-main-from-inv-btn">← Back to home</button>
                 </div>
             </div>
             
@@ -180,36 +234,58 @@
             </div>
         </section>
 
+        <!-- DAILY MISSIONS -->
+        <section id="screen-missions" class="panel collection-screen" style="display:none; padding:20px; min-height:500px;">
+            <div class="section-heading">
+                <h2><svg class="heading-icon" aria-hidden="true"><use href="#icon-scroll"></use></svg> Daily missions</h2>
+                <div class="mission-reset-label">Resets at midnight</div>
+            </div>
+            <p class="panel-subtitle">Complete missions for XP. Finish all four to claim a free Splat Lab case!</p>
+            <div id="missions-list" class="missions-list"></div>
+            <div id="missions-bonus" class="missions-bonus"></div>
+            <div id="missions-bonus-claim" class="missions-bonus-claim" style="display:none;"></div>
+        </section>
+
+        <!-- ARTIFACT COLLECTION -->
+        <section id="screen-collection" class="panel collection-screen" style="display:none; padding:20px; min-height:500px;">
+            <div class="section-heading">
+                <h2><svg class="heading-icon" aria-hidden="true"><use href="#icon-collection"></use></svg> Artifact collection</h2>
+                <div id="collection-total-progress" class="mission-reset-label"></div>
+            </div>
+            <p class="panel-subtitle">Every artifact you find is recorded forever—even after you sell it.</p>
+            <div id="collection-cases" class="collection-cases"></div>
+        </section>
+
         <!-- ========================================== -->
         <!-- ЭКРАН: БИТВЫ (Скрыт по умолчанию) -->
         <!-- ========================================== -->
         <section id="screen-battles" class="panel" style="display: none; padding: 20px; min-height: 500px;">
             <div class="section-heading" style="margin-bottom: 20px;">
-                <h2><img src="assets/icons/battles.svg" alt=""> Битвы</h2>
-                <button class="text-link" id="back-to-main-from-battles-btn">← На главную</button>
+                <h2><img src="assets/icons/battles.svg" alt=""> Battles</h2>
+                <button class="text-link" id="back-to-main-from-battles-btn">← Back to home</button>
             </div>
 
             <!-- Battle Banner -->
             <div class="battle-screen-banner">
                 <div class="battle-background"></div>
-                <div class="battle-character duck-side"><img src="assets/characters/battle-duck.png" alt=""></div>
-                <div class="battle-character cat-side"><img src="assets/characters/battle-cat.png" alt=""></div>
+                <div class="battle-character duck-side"><img src="assets/characters/battle-duck.webp" alt=""></div>
+                <div class="battle-character cat-side"><img src="assets/characters/battle-cat.webp" alt=""></div>
                 <div class="battle-vs">VS</div>
             </div>
 
             <!-- Battle Mode Cards -->
             <div class="battle-modes-grid">
                 <div class="battle-mode-card" id="btn-battle-cases-mode">
-                    <div class="battle-mode-icon">🎰</div>
-                    <h3>Битва Кейсов</h3>
-                    <p>Выбери кейс, бот выберет тот же. Оба открывают — чей дроп дороже, тот забирает ВСЁ! Проигравший получает 50% утешительных монет.</p>
-                    <button class="case-button">Выбрать кейс</button>
+                    <div class="battle-mode-icon"><svg class="icon" aria-hidden="true"><use href="#icon-dice"></use></svg></div>
+                    <h3>Case Battle</h3>
+                    <p>Pick a case, the bot picks the same one. Both open it, and whoever gets the more expensive drop takes EVERYTHING! The loser gets 50 percent consolation coins.</p>
+                    <button class="case-button">Choose case</button>
                 </div>
                 <div class="battle-mode-card" id="btn-battle-items-mode">
-                    <div class="battle-mode-icon">⚔️</div>
-                    <h3>Битва Предметов</h3>
-                    <p>Выбери предмет из инвентаря. Бот сгенерирует похожий по стоимости. Победитель забирает предмет + стоимость предмета противника!</p>
-                    <button class="case-button">Выбрать предмет</button>
+                    <div class="battle-mode-icon"><svg class="icon" aria-hidden="true"><use href="#icon-sword"></use></svg></div>
+                    <h3>Item Battle</h3>
+                    <p>Pick an item from your inventory. The bot generates a similar one by value. The winner takes the item plus the value of the opponent item!</p>
+                    <button class="case-button">Choose item</button>
                 </div>
             </div>
         </section>
@@ -224,11 +300,11 @@
                 <section class="hero">
                     <div class="hero-background"></div>
                     <div class="hero-copy">
-                        <h1>СРАЖАЙСЯ<br>ЗА ЛУЧШИЕ<br><em>АРТЕФАКТЫ!</em></h1>
-                        <button class="play-button"><span class="play-icon">▶</span> Играть</button>
+                        <h1>FIGHT<br>FOR THE BEST<br><em>ARTIFACTS!</em></h1>
+                        <button class="play-button"><span class="play-icon">▶</span> Play</button>
                     </div>
                     <div class="hero-characters">
-                        <img src="assets/characters/hero-cat.png" class="hero-cat" alt="Кот">
+                        <img src="assets/characters/hero-cat.webp" class="hero-cat" alt="Cat">
                     </div>
                     <div class="hero-artifacts">
                         <img src="assets/artifacts/pizza.png" class="hero-pizza" alt="">
@@ -238,9 +314,9 @@
                 </section>
 
                 <aside class="drop panel">
-                    <h2>Твой лучший дроп</h2>
-                    <img id="drop-display-img" src="assets/cases/case-common.png" alt="Твой дроп" class="drop-image">
-                    <h3 id="drop-display-name">Дропа еще нет</h3>
+                    <h2>Your best drop</h2>
+                    <img id="drop-display-img" src="assets/cases/case-common.png" alt="Your drop" class="drop-image">
+                    <h3 id="drop-display-name">No drops yet</h3>
                     <div class="drop-meta">
                         <span class="rarity" id="drop-display-rarity" style="display: none;">Common</span>
                         <span class="drop-value" id="drop-display-value" style="display: none;">+0</span>
@@ -257,25 +333,25 @@
             <section class="top-content">
                 <div class="cases-area panel">
                     <div class="section-heading">
-                        <h2><img src="assets/icons/cases.svg" alt=""> Кейсы</h2>
-                        <button class="text-link" id="view-all-cases-btn">Все кейсы →</button>
+                        <h2><img src="assets/icons/cases.svg" alt=""> Cases</h2>
+                        <button class="text-link" id="view-all-cases-btn">All cases →</button>
                     </div>
 
                     <div class="case-grid" id="main-cases-grid">
-                        <!-- Кейсы генерируются динамически из JS для синхронизации цен -->
+                        <!-- Cases генерируются динамически из JS для синхронизации цен -->
                     </div>
                 </div>
 
                 <section class="battle panel">
                     <div class="section-heading">
-                        <h2><img src="assets/icons/battles.svg" alt=""> Битва</h2>
+                        <h2><img src="assets/icons/battles.svg" alt=""> Battle</h2>
                     </div>
                     <div class="battle-scene">
                         <div class="battle-background"></div>
-                        <div class="battle-character duck-side"><img src="assets/characters/battle-duck.png" alt=""></div>
-                        <div class="battle-character cat-side"><img src="assets/characters/battle-cat.png" alt=""></div>
+                        <div class="battle-character duck-side"><img src="assets/characters/battle-duck.webp" alt=""></div>
+                        <div class="battle-character cat-side"><img src="assets/characters/battle-cat.webp" alt=""></div>
                         <div class="battle-vs">VS</div>
-                        <button class="battle-button">Сразиться</button>
+                        <button class="battle-button">Fight</button>
                     </div>
                 </section>
             </section>
@@ -283,7 +359,7 @@
             <!-- НИЖНИЙ РЯД -->
             <section class="bottom">
                 <div class="leaderboard panel">
-                    <h2><img src="assets/icons/rating.svg" alt=""> Топ игроков</h2>
+                    <h2><img src="assets/icons/rating.svg" alt=""> Top players</h2>
                     <div id="mini-leaderboard">
                         <!-- JS fills the real top-3 from the same rating source -->
                     </div>
@@ -292,58 +368,56 @@
                 <div class="promo panel achievements-panel" id="achievements-block">
                     <div class="promo-background"></div>
                     <div class="promo-copy">
-                        <h2>🏆 Достижения</h2>
+                        <h2><svg class="icon" aria-hidden="true"><use href="#icon-trophy"></use></svg> Achievements</h2>
                         <div class="achievements-avatars" id="achievements-avatars-mini">
                             <!-- JS fills locked/unlocked avatars -->
                         </div>
-                        <button id="btn-open-achievements">Подробнее →</button>
+                        <button id="btn-open-achievements">More →</button>
                     </div>
                 </div>
 
                 <div class="daily panel">
                     <div class="daily-copy">
-                        <h2>Подарок за вход!</h2>
-                        <p>Забирай награду<br>каждый день!</p>
+                        <h2>Login gift!</h2>
+                        <p>Claim your reward<br>every day!</p>
                         <button class="daily-button">
-                            <img src="assets/icons/gift.svg" alt=""> Забрать
+                            <img src="assets/icons/gift.svg" alt=""> Claim
                         </button>
                     </div>
-                    <img src="assets/characters/daily-duck.png" class="daily-duck" alt="">
+                    <img src="assets/characters/daily-duck.webp" class="daily-duck" alt="">
                 </div>
             </section>
             
-        </div> <!-- КОНЕЦ ОБЕРТКИ ГЛАВНОЙ -->
+        </div> <!-- END OF MAIN WRAPPER -->
 
         <!-- ЭКРАН: МАГАЗИН -->
         <section id="screen-shop" class="panel" style="display: none; padding: 20px; min-height: 500px;">
             <div class="section-heading" style="margin-bottom: 20px;">
-                <h2><img src="assets/icons/shop.svg" alt=""> Магазин</h2>
-                <button class="text-link" id="back-to-main-from-shop-btn">← На главную</button>
+                <h2><img src="assets/icons/shop.svg" alt=""> Shop</h2>
+                <button class="text-link" id="back-to-main-from-shop-btn">← Back to home</button>
             </div>
             
             <p style="font-size: 13px; color: #b8b4d9; margin-bottom: 20px;">
-                Получай монеты и кристаллы бесплатно за просмотр рекламы! Доступно 3 награды в день для каждой валюты.
+                Optional: watch a short video for free coins or gems. If no ad is available, you can keep playing normally.
             </p>
+            <div class="shop-boost panel" style="padding:20px; margin-bottom:20px; border-color:#42e8a3;">
+                <h3 style="color:#42e8a3; margin:0 0 8px;"><svg class="icon" aria-hidden="true"><use href="#icon-bolt"></use></svg> Double income</h3>
+                <p style="font-size:13px; color:#d4ccef; margin:0 0 14px;">Get 2 items from every case for 5 minutes.</p>
+                <button class="gold-button" id="btn-activate-boost"><svg class="icon" aria-hidden="true"><use href="#icon-bolt"></use></svg> Double income (5 min)</button>
+                <div class="boost-timer" id="boost-timer-sidebar" style="display:none; margin-top:8px; font-size:13px; color:#42e8a3; font-weight:800;"></div>
+            </div>
 
             <div class="shop-grid">
                 <!-- БЛОК МОНЕТ -->
                 <div class="panel" style="padding: 20px; border-color: #ffbd27;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                         <img src="assets/coin.png" alt="Coin" style="width: 40px; height: 40px; filter: drop-shadow(0 0 10px #ffbd27);">
-                        <h3 style="color: #ffbd27; margin: 0;">Монеты</h3>
+                        <h3 style="color: #ffbd27; margin: 0;">Coins</h3>
                     </div>
                     <div class="reward-list" id="shop-coins-list">
                         <div class="reward-card" data-index="0" data-type="coin">
                             <div class="reward-amount"><img src="assets/coin.png" alt=""> +500</div>
-                            <button class="reward-btn">Смотреть 1 видео</button>
-                        </div>
-                        <div class="reward-card" data-index="1" data-type="coin">
-                            <div class="reward-amount"><img src="assets/coin.png" alt=""> +1500</div>
-                            <button class="reward-btn">Смотреть 2 видео</button>
-                        </div>
-                        <div class="reward-card" data-index="2" data-type="coin">
-                            <div class="reward-amount"><img src="assets/coin.png" alt=""> +5000</div>
-                            <button class="reward-btn">Смотреть 3 видео</button>
+                            <button class="reward-btn">Watch video</button>
                         </div>
                     </div>
                 </div>
@@ -352,40 +426,45 @@
                 <div class="panel" style="padding: 20px; border-color: #b64cff;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                         <img src="assets/emerald.png" alt="Gem" style="width: 40px; height: 40px; filter: drop-shadow(0 0 10px #b64cff);">
-                        <h3 style="color: #b64cff; margin: 0;">Кристаллы</h3>
+                        <h3 style="color: #b64cff; margin: 0;">Gems</h3>
                     </div>
                     <div class="reward-list" id="shop-gems-list">
                         <div class="reward-card" data-index="0" data-type="gem">
                             <div class="reward-amount" style="color: #b64cff;"><img src="assets/emerald.png" alt=""> +10</div>
-                            <button class="reward-btn">Смотреть 1 видео</button>
-                        </div>
-                        <div class="reward-card" data-index="1" data-type="gem">
-                            <div class="reward-amount" style="color: #b64cff;"><img src="assets/emerald.png" alt=""> +30</div>
-                            <button class="reward-btn">Смотреть 2 видео</button>
-                        </div>
-                        <div class="reward-card" data-index="2" data-type="gem">
-                            <div class="reward-amount" style="color: #b64cff;"><img src="assets/emerald.png" alt=""> +100</div>
-                            <button class="reward-btn">Смотреть 3 видео</button>
+                            <button class="reward-btn">Watch video</button>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="shop-extra-grid">
+                <section class="panel shop-nickname-panel">
+                    <h3>Nickname styles</h3>
+                    <p>Buy a glow for your nickname with crystals.</p>
+                    <div id="nickname-style-list" class="shop-offer-list"></div>
+                </section>
+                <section class="panel shop-cases-panel">
+                    <h3>Daily cases</h3>
+                    <p>One purchase of each case per day.</p>
+                    <div id="daily-case-list" class="shop-offer-list"></div>
+                </section>
             </div>
         </section>
 
         <!-- ЭКРАН: РЕЙТИНГ -->
         <section id="screen-leaderboard" class="panel" style="display: none; padding: 20px; min-height: 500px;">
             <div class="section-heading" style="margin-bottom: 20px;">
-                <h2><img src="assets/icons/rating.svg" alt=""> Зал Славы</h2>
-                <button class="text-link" id="back-to-main-from-lb-btn">← На главную</button>
+                <h2><img src="assets/icons/rating.svg" alt=""> Hall of Fame</h2>
+                <button class="text-link" id="back-to-main-from-lb-btn">← Back to home</button>
             </div>
             
             <p style="font-size: 13px; color: #b8b4d9; margin-bottom: 15px;">
-                Лучшие коллекционеры со всего мира. Сможешь их обогнать?
+                The best collectors from around the world. Can you beat them?
             </p>
 
             <!-- ВОТ СЮДА БУДЕТ ВСТАВЛЯТЬСЯ ТАБЛИЦА -->
             <div id="leaderboard-list" class="leaderboard-full">
-                <div style="text-align: center; padding: 20px; color: #b8b4d9;">Загрузка рейтинга...</div>
+                <div style="text-align: center; padding: 20px; color: #b8b4d9;">Loading leaderboard...</div>
             </div>
         </section>
 
@@ -395,22 +474,24 @@
 <!-- МОДАЛЬНОЕ ОКНО: ВЫБОР АВАТАРА -->
 <div class="modal-overlay" id="avatar-modal">
     <div class="modal-content">
-        <h3>Выбери своего персонажа</h3>
+        <h3>Choose your character</h3>
         <div class="avatar-grid" id="avatar-grid"></div>
-        <button class="close-modal-btn">Закрыть</button>
+        <div class="achievement-section-title">Unlocked frames</div>
+        <div class="avatar-grid avatar-frame-chooser" id="avatar-frame-grid"></div>
+        <button class="close-modal-btn">Close</button>
     </div>
 </div>
 
 <!-- МОДАЛЬНОЕ ОКНО: СМЕНА ИМЕНИ -->
 <div class="modal-overlay" id="name-modal">
     <div class="modal-content">
-        <h3>Смена никнейма</h3>
-        <p class="modal-desc">Придумай уникальное имя (от 3 до 15 символов)</p>
-        <input type="text" id="name-input" class="name-input" placeholder="Твой никнейм..." maxlength="15">
+        <h3>Change nickname</h3>
+        <p class="modal-desc">Pick a unique name (3 to 15 characters)</p>
+        <input type="text" id="name-input" class="name-input" placeholder="Your nickname..." maxlength="15">
         <div class="error-text" id="name-error"></div>
         <div class="modal-actions">
-            <button class="cancel-btn">Отмена</button>
-            <button class="save-btn" id="save-name-btn">Сохранить</button>
+            <button class="cancel-btn">Cancel</button>
+            <button class="save-btn" id="save-name-btn">Save</button>
         </div>
     </div>
 </div>
@@ -423,8 +504,8 @@
                 <img id="preview-img" src="assets/cases/case-common.png" alt="Case">
             </div>
             <div class="preview-header-info">
-                <h3 id="preview-title">Название кейса</h3>
-                <p id="preview-desc" class="meme-desc">Мемное описание...</p>
+                <h3 id="preview-title">Case name</h3>
+                <p id="preview-desc" class="meme-desc">Meme description...</p>
             </div>
         </div>
 
@@ -434,11 +515,11 @@
 
         <div class="preview-footer">
             <button class="save-btn" id="confirm-open-btn" style="width: 100%;">
-                Открыть за <span id="btn-price">99</span> 
+                Open for <span id="btn-price">99</span> 
                 <img src="assets/coin.png" style="width: 18px; height: 18px; vertical-align: middle; margin-bottom: 2px;">
             </button>
         </div>
-        <button class="close-modal-btn" id="close-preview-btn" style="margin-top: 10px;">Отмена</button>
+        <button class="close-modal-btn" id="close-preview-btn" style="margin-top: 10px;">Cancel</button>
     </div>
 </div>
 
@@ -449,28 +530,48 @@
             <img id="item-info-img" src="" alt="Artifact">
         </div>
         
-        <h3 id="item-info-name">Название артефакта</h3>
+        <h3 id="item-info-name">Artifact name</h3>
         <div class="result-rarity" id="item-info-rarity">Common</div>
         <p id="item-info-desc" class="meme-desc" style="font-size: 15px; margin-top: 10px; margin-bottom: 15px;">
-            Мемное описание артефакта...
+            Meme description of the artifact...
         </p>
         
         <div class="item-info-stats">
             <div class="stat-box">
-                <span class="stat-label">Шанс выпадения</span>
+                <span class="stat-label">Drop chance</span>
                 <span class="stat-value" id="item-info-chance">0%</span>
             </div>
             <div class="stat-box">
-                <span class="stat-label">Стоимость</span>
+                <span class="stat-label">Value</span>
                 <span class="stat-value" id="item-info-value" style="color: #ffca35;">+0</span>
             </div>
         </div>
 
         <!-- Кнопки в окне инфо -->
         <div class="result-actions" style="margin-top: 10px;">
-            <button class="save-btn btn-keep" id="close-item-info-btn">Закрыть</button>
-            <button class="save-btn btn-sell" id="sell-item-info-btn" style="display: none;">Продать</button>
+            <button class="save-btn btn-keep" id="close-item-info-btn">Close</button>
+            <button class="save-btn btn-sell" id="sell-item-info-btn" style="display: none;">Sell</button>
+            <button class="save-btn" id="upgrade-item-info-btn" style="display: none;">Upgrade</button>
         </div>
+    </div>
+</div>
+
+<!-- UPGRADE ITEM MODAL -->
+<div class="modal-overlay" id="upgrade-modal" style="z-index: 1200;">
+    <div class="modal-content upgrade-content">
+        <h3>Upgrade artifact</h3>
+        <p class="modal-desc">Choose one inventory item, then try for an item of the next rarity. A failed upgrade destroys the selected item.</p>
+        <div id="upgrade-source-grid" class="inventory-grid upgrade-source-grid"></div>
+        <div id="upgrade-details" style="display:none;">
+            <h4>Possible results <span id="upgrade-rarity-label"></span></h4>
+            <div id="upgrade-target-grid" class="upgrade-target-grid"></div>
+            <div class="roulette-container upgrade-roulette-container" id="upgrade-roulette-container" style="display:none;">
+                <div class="roulette-pointer"></div>
+                <div class="roulette-track" id="upgrade-roulette-track"></div>
+            </div>
+            <button class="save-btn" id="btn-start-upgrade" disabled>Choose an item</button>
+        </div>
+        <button class="close-modal-btn" id="btn-close-upgrade">Close</button>
     </div>
 </div>
 
@@ -479,25 +580,17 @@
     <div class="modal-content coins-content">
         <div class="coins-header">
             <img src="assets/coin.png" alt="Coin">
-            <h3>Получить монеты</h3>
+            <h3>Get coins</h3>
         </div>
-        <p class="modal-desc">Посмотри короткое видео и получи награду! Доступно 3 награды в день.</p>
+        <p class="modal-desc">Optional video reward: watch to get coins. You can close this window and keep playing if no ad is available.</p>
         
         <div class="reward-list">
             <div class="reward-card" data-index="0">
                 <div class="reward-amount"><img src="assets/coin.png" alt=""> +500</div>
-                <button class="reward-btn">Смотреть 1 видео</button>
-            </div>
-            <div class="reward-card" data-index="1">
-                <div class="reward-amount"><img src="assets/coin.png" alt=""> +1500</div>
-                <button class="reward-btn">Смотреть 2 видео</button>
-            </div>
-            <div class="reward-card" data-index="2">
-                <div class="reward-amount"><img src="assets/coin.png" alt=""> +5000</div>
-                <button class="reward-btn">Смотреть 3 видео</button>
+                <button class="reward-btn">Watch video</button>
             </div>
         </div>
-        <button class="close-modal-btn" id="close-coins-btn">Закрыть</button>
+        <button class="close-modal-btn" id="close-coins-btn">Close</button>
     </div>
 </div>
 
@@ -506,32 +599,24 @@
     <div class="modal-content coins-content">
         <div class="coins-header">
             <img src="assets/emerald.png" alt="Gem">
-            <h3>Получить кристаллы</h3>
+            <h3>Get gems</h3>
         </div>
-        <p class="modal-desc">Посмотри короткое видео и получи кристаллы! Доступно 3 награды в день.</p>
+        <p class="modal-desc">Optional video reward: watch to get gems. You can close this window and keep playing if no ad is available.</p>
         
         <div class="reward-list">
             <div class="reward-card" data-index="0" data-type="gem">
                 <div class="reward-amount" style="color: #b64cff;"><img src="assets/emerald.png" alt=""> +10</div>
-                <button class="reward-btn">Смотреть 1 видео</button>
-            </div>
-            <div class="reward-card" data-index="1" data-type="gem">
-                <div class="reward-amount" style="color: #b64cff;"><img src="assets/emerald.png" alt=""> +30</div>
-                <button class="reward-btn">Смотреть 2 видео</button>
-            </div>
-            <div class="reward-card" data-index="2" data-type="gem">
-                <div class="reward-amount" style="color: #b64cff;"><img src="assets/emerald.png" alt=""> +100</div>
-                <button class="reward-btn">Смотреть 3 видео</button>
+                <button class="reward-btn">Watch video</button>
             </div>
         </div>
-        <button class="close-modal-btn" id="close-gems-btn">Закрыть</button>
+        <button class="close-modal-btn" id="close-gems-btn">Close</button>
     </div>
 </div>
 
 <!-- ОКНО РУЛЕТКИ -->
-<div class="modal-overlay" id="case-open-modal">
+<div class="modal-overlay" id="case-open-modal" style="z-index: 1000;">
     <div class="modal-content case-open-content">
-        <h3 id="case-title">Открытие...</h3>
+        <h3 id="case-title">Opening...</h3>
         <div class="roulette-container">
             <div class="roulette-pointer"></div>
             <div class="roulette-track" id="roulette-track"></div>
@@ -542,60 +627,61 @@
 <!-- МОДАЛЬНОЕ ОКНО: ОНБОРДИНГ (ПЕРВЫЙ ВХОД) -->
 <div class="modal-overlay" id="onboarding-modal" style="z-index: 1200;">
     <div class="modal-content result-content">
-        <h3 style="color: #ffca35; font-size: 24px;">🎁 Добро пожаловать!</h3>
-        <p class="modal-desc">Твой стартовый подарок — бесплатный кейс «Мистический Каталог».<br>Испытай удачу прямо сейчас!</p>
+        <h3 style="color: #ffca35; font-size: 24px;"><svg class="icon" aria-hidden="true"><use href="#icon-gift"></use></svg> Welcome!</h3>
+        <p class="modal-desc">Your starter gift is a free Mystic Catalog case.<br>Try your luck right now!</p>
         <div class="result-image-wrapper frame-mythic" style="margin: 20px auto;">
             <img src="assets/cases/case-mystic.png" alt="Mystic Case" style="width: 80%; height: 80%; object-fit: contain;">
         </div>
-        <button class="save-btn btn-keep" id="btn-start-onboarding" style="width: 100%; font-size: 18px;">Открыть бесплатно</button>
+        <button class="save-btn btn-keep" id="btn-start-onboarding" style="width: 100%; font-size: 18px;">Open for free</button>
     </div>
 </div>
 
 <!-- МОДАЛЬНОЕ ОКНО: ЕЖЕДНЕВНАЯ НАГРАДА -->
 <div class="modal-overlay" id="daily-reward-modal" style="z-index: 1150;">
     <div class="modal-content result-content">
-        <h3>📅 Ежедневная награда</h3>
-        <p class="modal-desc">Ты получил бесплатный кейс «Барахолка»!<br>Заходи каждый день за новыми подарками.</p>
+        <h3><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg> Daily reward</h3>
+        <p class="modal-desc">You got a free Junk Market case and 5 crystals!<br>Come back every day for new gifts.</p>
         <div class="result-image-wrapper frame-common" style="margin: 20px auto;">
             <img src="assets/cases/case-common.png" alt="Daily Case" style="width: 80%; height: 80%; object-fit: contain;">
         </div>
-        <button class="save-btn btn-keep" id="btn-claim-daily" style="width: 100%;">Забрать и открыть</button>
-        <button class="close-modal-btn" id="btn-skip-daily" style="margin-top: 10px;">Позже</button>
+        <button class="save-btn btn-keep" id="btn-claim-daily" style="width: 100%;">Claim and open</button>
+        <button class="close-modal-btn" id="btn-skip-daily" style="margin-top: 10px;">Later</button>
     </div>
 </div>
 
 <!-- МОДАЛЬНОЕ ОКНО: БИТВА КЕЙСОВ -->
 <div class="modal-overlay" id="battle-modal" style="z-index: 1100;">
     <div class="modal-content" style="max-width: 700px; padding: 30px;">
-        <h3 style="text-align: center; margin-bottom: 20px;">⚔️ Битва Кейсов</h3>
+        <h3 style="text-align: center; margin-bottom: 20px;"><svg class="icon" aria-hidden="true"><use href="#icon-sword"></use></svg> Case Battle</h3>
         
         <div id="battle-setup" style="display: block;">
-            <p style="text-align: center; color: #b8b4d9; margin-bottom: 20px;">Выбери кейс для битвы. Ты и Бот откроете одинаковый кейс. Чей дроп дороже — тот забирает ВСЁ!</p>
+            <p style="text-align: center; color: #b8b4d9; margin-bottom: 20px;">Choose a case for the battle. You and the bot open the same case. Whoever gets the more expensive drop takes EVERYTHING!</p>
             <div class="case-grid" id="battle-cases-grid" style="grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
                 <!-- JS заполнит это -->
             </div>
-            <button class="close-modal-btn" id="btn-close-battle">Отмена</button>
+            <button class="close-modal-btn" id="btn-close-battle">Cancel</button>
         </div>
 
         <div id="battle-arena" style="display: none; text-align: center;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div style="text-align: center; width: 45%;">
-                    <img src="assets/avatar.png" id="battle-player-avatar" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #42e8a3;">
-                    <div style="font-weight: 800; margin-top: 5px;">ТЫ</div>
+                    <span class="battle-avatar-frame" id="battle-player-frame"><img src="assets/avatar/avatar.png" id="battle-player-avatar" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #42e8a3; object-fit: cover;"></span>
+                    <div style="font-weight: 800; margin-top: 5px;" id="battle-player-name">YOU</div>
+                    <div class="battle-player-title" id="battle-player-title" style="display:none;"></div>
                 </div>
                 <div style="font-size: 24px; font-weight: 900; color: #ffca35;">VS</div>
                 <div style="text-align: center; width: 45%;">
-                    <img src="assets/characters/battle-duck.png" id="battle-bot-avatar" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #ff4d4d; object-fit: cover;">
-                    <div style="font-weight: 800; margin-top: 5px;" id="battle-bot-name">БОТ</div>
+                    <img src="assets/characters/battle-duck.webp" id="battle-bot-avatar" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #ff4d4d; object-fit: cover;">
+                    <div style="font-weight: 800; margin-top: 5px;" id="battle-bot-name">BOT</div>
                 </div>
             </div>
             
             <div style="background: #090a1b; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #302064;">
-                <div style="font-size: 12px; color: #b8b4d9;">СТАВКА</div>
-                <div id="battle-stake-display" style="font-size: 20px; font-weight: 900; color: #ffca35;">0 кр.</div>
+                <div style="font-size: 12px; color: #b8b4d9;">STAKE</div>
+                <div id="battle-stake-display" style="font-size: 20px; font-weight: 900; color: #ffca35;">0 cr.</div>
             </div>
 
-            <div id="battle-status" style="font-size: 18px; font-weight: 700; margin-bottom: 15px; min-height: 27px;">Открытие...</div>
+            <div id="battle-status" style="font-size: 18px; font-weight: 700; margin-bottom: 15px; min-height: 27px;">Opening...</div>
             
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <div class="result-image-wrapper frame-common" id="battle-player-drop" style="width: 120px; height: 120px; opacity: 0.3;">
@@ -606,7 +692,7 @@
                 </div>
             </div>
 
-            <button class="save-btn" id="btn-finish-battle" style="display: none; margin-top: 20px; width: 100%;">Забрать выигрыш</button>
+            <button class="save-btn" id="btn-finish-battle" style="display: none; margin-top: 20px; width: 100%;">Claim winnings</button>
         </div>
     </div>
 </div>
@@ -614,14 +700,14 @@
 <!-- ОКНО РЕЗУЛЬТАТА -->
 <div class="modal-overlay" id="drop-result-modal">
     <div class="modal-content result-content">
-        <h3>Твой дроп!</h3>
+        <h3>Your drop!</h3>
         <div class="result-image-wrapper" id="result-frame">
             <img id="result-image" src="" alt="Drop">
         </div>
         <div class="result-info">
-            <h4 id="result-name">Название</h4>
+            <h4 id="result-name">Name</h4>
             <div class="result-rarity" id="result-rarity">Common</div>
-            <p id="result-desc" class="meme-desc">Мемное описание артефакта...</p>
+            <p id="result-desc" class="meme-desc">Meme description of the artifact...</p>
             <div class="price-tag" style="margin: 10px auto; justify-content: center;">
                 <img src="assets/coin.png" alt=""> 
                 <span id="result-value" style="font-size: 20px;">+0</span>
@@ -630,27 +716,26 @@
         
         <!-- ДВЕ КНОПКИ -->
         <div class="result-actions">
-            <button class="save-btn btn-keep" id="btn-keep-case">Забрать</button>
-            <button class="save-btn btn-sell" id="btn-sell-case">Продать</button>
+            <button class="save-btn btn-keep" id="btn-keep-case">Claim</button>
+            <button class="save-btn btn-sell" id="btn-sell-case">Sell</button>
         </div>
-        <button class="save-btn btn-reroll" id="btn-reroll-case" style="width:100%; margin-top:8px; background:linear-gradient(#b64cff,#7a20cc); border-color:#d69aff; color:#fff;">
-            🔄 Переоткрыть за 50 💎
-        </button>
     </div>
 </div>
 
 <!-- МОДАЛЬНОЕ ОКНО: ДОСТИЖЕНИЯ -->
 <div class="modal-overlay" id="achievements-modal" style="z-index: 1100;">
     <div class="modal-content" style="max-width: 600px;">
-        <h3>🏆 Достижения и Аватары</h3>
-        <p class="modal-desc">Повышай уровень, чтобы открывать новые аватары!</p>
+        <h3><svg class="icon" aria-hidden="true"><use href="#icon-trophy"></use></svg> Achievements and Avatars</h3>
+        <p class="modal-desc">Track achievement progress, earn crystals, and unlock exclusive avatars and frames.</p>
         <div class="level-info-modal" style="text-align:center; margin-bottom:15px;">
             <span style="font-size:28px; font-weight:900; color:#ffca35;" id="ach-level-display">Lv. 1</span>
             <div class="xp" style="width:200px; margin:8px auto;"><div class="xp-fill" id="ach-xp-fill"></div></div>
             <small id="ach-xp-text" style="color:#b8b4d9;">0 / 500 XP</small>
         </div>
+        <div class="achievement-section-title">Achievement rewards</div>
+        <div class="avatar-grid" id="achievement-rewards"></div>
         <div class="avatar-grid" id="achievements-grid"></div>
-        <button class="close-modal-btn" id="close-achievements-btn">Закрыть</button>
+        <button class="close-modal-btn" id="close-achievements-btn">Close</button>
     </div>
 </div>
 
@@ -659,13 +744,14 @@
     <div class="modal-content" style="max-width: 500px; text-align: center; background: radial-gradient(ellipse at 50% 50%, #2a1060, #0e102a); border-color: #ff4d4d; overflow: hidden;">
         <div class="vs-animation-container" id="vs-animation-container">
             <div class="vs-player-side">
-                <img id="vs-player-avatar" src="assets/avatar.png" alt="">
-                <div id="vs-player-name">ТЫ</div>
+                <span class="battle-avatar-frame" id="vs-player-frame"><img id="vs-player-avatar" src="assets/avatar/avatar.png" alt=""></span>
+                <div id="vs-player-name">YOU</div>
+                <div class="vs-player-title" id="vs-player-title" style="display:none;"></div>
             </div>
             <div class="vs-text" id="vs-text">VS</div>
             <div class="vs-bot-side">
-                <img id="vs-bot-avatar" src="assets/characters/battle-duck.png" alt="">
-                <div id="vs-bot-name">БОТ</div>
+                <img id="vs-bot-avatar" src="assets/characters/battle-duck.webp" alt="">
+                <div id="vs-bot-name">BOT</div>
             </div>
         </div>
     </div>
@@ -674,18 +760,30 @@
 <!-- МОДАЛЬНОЕ ОКНО: ВЫБОР ПРЕДМЕТА ДЛЯ БИТВЫ -->
 <div class="modal-overlay" id="battle-item-pick-modal" style="z-index: 1100;">
     <div class="modal-content" style="max-width: 700px;">
-        <h3>⚔️ Выбери предмет для битвы</h3>
-        <p class="modal-desc">Выбери предмет из инвентаря. Бот сгенерирует похожий по стоимости.</p>
+        <h3><svg class="icon" aria-hidden="true"><use href="#icon-sword"></use></svg> Choose an item for the battle</h3>
+        <p class="modal-desc">Pick an item from your inventory. The bot stakes a random artifact worth 50–150% of its value. Choose whether to risk it.</p>
         <div id="battle-item-pick-grid" class="inventory-grid" style="max-height:300px; overflow-y:auto;"></div>
-        <button class="close-modal-btn" id="btn-close-item-pick" style="margin-top:15px;">Отмена</button>
+        <button class="close-modal-btn" id="btn-close-item-pick" style="margin-top:15px;">Cancel</button>
     </div>
 </div>
 
 <!-- TOAST УВЕДОМЛЕНИЯ -->
-<div id="toast" class="toast">Уведомление</div>
+<div id="toast" class="toast" role="alert" aria-live="assertive"><span class="toast-icon" aria-hidden="true"></span><span class="toast-message">Notification</span></div>
+
+<!-- ИГРОВОЕ ОКНО ПОДТВЕРЖДЕНИЯ (вместо браузерного confirm) -->
+<div class="modal-overlay" id="confirm-modal" style="z-index: 2147482000;">
+    <div class="modal-content confirm-content" style="max-width: 420px;">
+        <h3 id="confirm-title">Confirmation</h3>
+        <p class="modal-desc" id="confirm-text" style="text-align: center; margin-bottom: 18px;"></p>
+        <div class="modal-actions">
+            <button class="cancel-btn" id="confirm-cancel-btn">Cancel</button>
+            <button class="save-btn" id="confirm-ok-btn">Confirm</button>
+        </div>
+    </div>
+</div>
 
 <!-- АНИМАЦИЯ ОТКРЫТИЯ КЕЙСА (скрыта по умолчанию) -->
-<div class="modal-overlay" id="case-opening-animation" style="z-index: 1300; background: radial-gradient(ellipse at center, rgba(60, 20, 120, 0.9), rgba(4, 5, 16, 0.98));">
+<div class="modal-overlay" id="case-opening-animation" style="z-index: 1100; background: radial-gradient(ellipse at center, rgba(60, 20, 120, 0.9), rgba(4, 5, 16, 0.98));">
     <div class="case-opening-inner">
         <img id="case-opening-img" src="" alt="Case" class="case-opening-img">
         <div class="case-opening-glow"></div>
@@ -693,7 +791,7 @@
     </div>
 </div>
 <!-- ПОЛНОЭКРАННАЯ АНИМАЦИЯ ДРОПА (5 секунд) -->
-<div class="modal-overlay" id="drop-reveal-animation" style="z-index: 1400; background: radial-gradient(ellipse at center, rgba(20, 5, 50, 0.95), rgba(4, 5, 16, 1));">
+<div class="modal-overlay" id="drop-reveal-animation" style="z-index: 1200; background: radial-gradient(ellipse at center, rgba(20, 5, 50, 0.95), rgba(4, 5, 16, 1));">
     <div class="drop-reveal-inner">
         <div class="drop-reveal-rays" id="drop-reveal-rays"></div>
         <div class="drop-reveal-frame" id="drop-reveal-frame">
@@ -702,6 +800,94 @@
         <div class="drop-reveal-glow" id="drop-reveal-glow"></div>
     </div>
 </div>
-<script src="js/main.js"></script>
+<script>
+(async function bootGameWithCloudSave() {
+    let memoryFallback = null;
+    const getLocalFallback = () => {
+        try { return window.localStorage; }
+        catch (error) {
+            if (!memoryFallback) {
+                const memory = new Map();
+                memoryFallback = {
+                    getItem: key => memory.has(String(key)) ? memory.get(String(key)) : null,
+                    setItem: (key, value) => memory.set(String(key), String(value)),
+                    removeItem: key => memory.delete(String(key)),
+                    clear: () => memory.clear(),
+                    key: index => Array.from(memory.keys())[index] ?? null,
+                    get length() { return memory.size; }
+                };
+            }
+            return memoryFallback;
+        }
+    };
+    const clearLocalProgress = () => {
+        const local = getLocalFallback();
+        const migrationKey = "artifactClashLocalSaveMigratedV1";
+        for (let i = local.length - 1; i >= 0; i--) {
+            const key = local.key(i);
+            if (key && key !== migrationKey) local.removeItem(key);
+        }
+        local.setItem(migrationKey, "true");
+    };
+    const startGame = () => {
+        const script = document.createElement("script");
+        script.src = "js/main.js";
+        document.body.appendChild(script);
+    };
+    window.__clearGameProgress = async () => {
+        const sdk = window.CrazyGames && window.CrazyGames.SDK;
+        const remoteClear = sdk && sdk.data && typeof sdk.data.clear === "function"
+            ? Promise.resolve().then(() => sdk.data.clear()).then(() => ({ ok: true }), error => ({ ok: false, error }))
+            : Promise.resolve({ ok: true });
+        clearLocalProgress();
+        const result = await remoteClear;
+        if (!result.ok) throw result.error;
+    };
+    try {
+        const sdk = window.CrazyGames && window.CrazyGames.SDK;
+        if (sdk) {
+            await sdk.init();
+            if (!sdk.data) throw new Error("CrazyGames data module unavailable");
+            // One-time migration: preserve old browser saves, but never overwrite cloud progress.
+            const local = getLocalFallback();
+            const migrationKey = "artifactClashLocalSaveMigratedV1";
+            if (sdk.data.getItem(migrationKey) !== "true") {
+                const localKeys = Array.from({ length: local.length }, (_, index) => local.key(index));
+                for (const key of localKeys) {
+                    if (key && key !== migrationKey && sdk.data.getItem(key) === null) {
+                        const value = local.getItem(key);
+                        if (value !== null) sdk.data.setItem(key, value);
+                    }
+                }
+                sdk.data.setItem(migrationKey, "true");
+            }
+            // Local copies are no longer authoritative after cloud migration; keep only the migration marker.
+            if (local.length) clearLocalProgress();
+            window.gameStorage = {
+                getItem: key => sdk.data.getItem(String(key)),
+                setItem: (key, value) => sdk.data.setItem(String(key), String(value)),
+                removeItem: key => sdk.data.removeItem(String(key)),
+                clear: () => sdk.data.clear()
+            };
+            window.__cgInitialized = true;
+        } else {
+            window.gameStorage = getLocalFallback();
+            window.__clearGameProgress = () => {
+                window.gameStorage.clear();
+                window.gameStorage.setItem("artifactClashLocalSaveMigratedV1", "true");
+            };
+        }
+    } catch (error) {
+        console.warn("Cloud save unavailable; using local storage", error);
+        window.gameStorage = getLocalFallback();
+        window.__clearGameProgress = () => {
+            window.gameStorage.clear();
+            window.gameStorage.setItem("artifactClashLocalSaveMigratedV1", "true");
+        };
+    }
+    if (window.__gameImagesReady) await window.__gameImagesReady;
+    startGame();
+})();
+</script>
 </body>
 </html>
